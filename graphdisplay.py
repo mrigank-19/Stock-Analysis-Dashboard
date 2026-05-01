@@ -64,5 +64,4 @@ def run_visualize():
 
     plt.show()
 
-    print(summary_df)
 
