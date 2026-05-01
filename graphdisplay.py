@@ -62,6 +62,7 @@ def run_visualize():
     for i in range(len(summary_df)):
         plt.text(x.iloc[i], y.iloc[i], summary_df['ticker'].iloc[i])
 
+    plt.savefig("risk_return.png")  # save FIRST
     plt.show()
 
 
