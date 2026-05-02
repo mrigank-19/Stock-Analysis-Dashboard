@@ -19,21 +19,6 @@ def run_visualize():
     df['volatility'] = df.groupby('ticker')['daily_return'].transform(lambda x: x.rolling(30).std() * np.sqrt(252))
 
 
-    # # Filter for one stock
-    # mahindra = df[df['ticker'] == 'M&M.NS'].copy()
-
-    # plt.figure(figsize=(12, 6))
-    # plt.plot(mahindra['date'], mahindra['close'], label='Close Price', linewidth=1.5)
-    # plt.plot(mahindra['date'], mahindra['MA_20'], label='20-day MA', linewidth=1)
-    # plt.plot(mahindra['date'], mahindra['MA_50'], label='50-day MA', linewidth=1)
-    # plt.title('m&M Stock Price with Moving Averages')
-    # plt.xlabel('Date')
-    # plt.ylabel('Price (INR)')
-    # plt.legend()
-    # plt.grid(True, alpha=0.3)
-    # plt.show()
-
-
     #soring for correct first and last values
     df = df.sort_values(['ticker','date'])
 
@@ -62,7 +47,6 @@ def run_visualize():
     for i in range(len(summary_df)):
         plt.text(x.iloc[i], y.iloc[i], summary_df['ticker'].iloc[i])
 
-    
     plt.show()
 
 
