@@ -16,12 +16,12 @@ for i in G_stocks:
 for ticker, df in stocks_data.items():
     df = df.reset_index()
     
-    # Rename columns explicitly (simplest fix)
     df.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
     df['ticker'] = ticker
     
-    df = df.dropna()
     stocks_data[ticker] = df
+    df = df.dropna()
+    df = df.reset_index(drop=True)
 
 conn = sqlite3.connect('stocks.db')
 cursor = conn.cursor()
@@ -35,12 +35,23 @@ CREATE TABLE IF NOT EXISTS stock_prices (
     high REAL,
     low REAL,
     close REAL,
-    volume INTEGER
-)
+    volume INTEGER,
+    UNIQUE(ticker, date)
+);
 ''')
 
+
 for ticker, df in stocks_data.items():
-    df.to_sql('stock_prices', conn, if_exists='append', index=False)
+    df['date'] = df['date'].astype(str)
+    df['volume'] = df['volume'].astype(int)
+
+    records = df[['date', 'open', 'high', 'low', 'close', 'volume', 'ticker']].values.tolist()
+
+    cursor.executemany('''
+        INSERT OR IGNORE INTO stock_prices
+        (date, open, high, low, close, volume, ticker)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', records)
 
     
 conn.commit()
